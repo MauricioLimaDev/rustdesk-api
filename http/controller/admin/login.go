@@ -57,20 +57,21 @@ func (ct *Login) Login(c *gin.Context) {
 		return
 	}
 
+	// Bloqueio por usuário (não por IP): checado antes do captcha e da senha, para avisar
+	// logo que o usuário está bloqueado e não dar mais tentativas.
+	userKey := strings.ToLower(strings.TrimSpace(f.Username))
+	if banned, _ := global.UserLimiter.CheckSecurityStatus(userKey); banned {
+		global.Logger.Warn(fmt.Sprintf("Login Fail: %s %s %s %s", "UserLocked", userKey, c.RemoteIP(), clientIp))
+		response.Fail(c, 101, response.TranslateMsg(c, "UserLocked"))
+		return
+	}
+
 	// 检查是否需要验证码
 	if needCaptcha {
 		if f.CaptchaId == "" || f.Captcha == "" || !loginLimiter.VerifyCaptcha(f.CaptchaId, f.Captcha) {
 			response.Fail(c, 101, response.TranslateMsg(c, "CaptchaError"))
 			return
 		}
-	}
-
-	// Bloqueio por usuário (não por IP): checado antes da senha para não dar mais tentativas.
-	userKey := strings.ToLower(strings.TrimSpace(f.Username))
-	if banned, _ := global.UserLimiter.CheckSecurityStatus(userKey); banned {
-		global.Logger.Warn(fmt.Sprintf("Login Fail: %s %s %s %s", "UserLocked", userKey, c.RemoteIP(), clientIp))
-		response.Fail(c, 101, response.TranslateMsg(c, "UserLocked"))
-		return
 	}
 
 	u := service.AllService.UserService.InfoByUsernamePassword(f.Username, f.Password)
