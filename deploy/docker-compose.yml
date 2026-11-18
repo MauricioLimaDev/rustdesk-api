@@ -4,8 +4,8 @@
 #   caddy        -> HTTPS automático (Let's Encrypt) na frente da API
 #
 # Antes de subir:
-#   1. Troque remoto.appelsoft.com.br abaixo e no Caddyfile (ex.: suporte.appelsoft.com.br)
-#   2. Aponte o DNS (registro A) do domínio para o IP da VPS
+#   1. DNS: remoto.appelsoft.com.br (registro A) -> IP da VPS
+#   2. Para outro domínio, troque aqui e no Caddyfile
 #   3. Libere 80/tcp e 443/tcp no firewall. A 21114 NÃO precisa ficar aberta.
 
 services:
