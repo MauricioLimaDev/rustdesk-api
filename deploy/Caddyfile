@@ -10,6 +10,17 @@ remoto.appelsoft.com.br {
 		file_server
 	}
 
+	# Versão publicada do cliente, lida pelo atualizador automático
+	# (C:\ProgramData\SuporteAppelsoft\atualizar-cliente.ps1 nas máquinas).
+	# Formato: {"versao": "1.5.3.1", "sha256": "<64 hex>", "url": "https://remoto.appelsoft.com.br/download/cliente"}
+	handle /download/versao.json {
+		root * /srv/downloads
+		rewrite * /versao.json
+		header Content-Type "application/json; charset=utf-8"
+		header Cache-Control "no-cache, no-store, must-revalidate"
+		file_server
+	}
+
 	handle {
 		reverse_proxy 127.0.0.1:21114 {
 			header_up X-Real-IP {remote_host}
