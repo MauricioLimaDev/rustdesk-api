@@ -6,6 +6,7 @@ import (
 	"github.com/go-playground/locales/es"
 	"github.com/go-playground/locales/fr"
 	"github.com/go-playground/locales/ko"
+	"github.com/go-playground/locales/pt_BR"
 	"github.com/go-playground/locales/ru"
 	"github.com/go-playground/locales/zh_Hans_CN"
 	"github.com/go-playground/locales/zh_Hant"
@@ -15,6 +16,7 @@ import (
 	es_translations "github.com/go-playground/validator/v10/translations/es"
 	fr_translations "github.com/go-playground/validator/v10/translations/fr"
 	ko_translations "github.com/go-playground/validator/v10/translations/ko"
+	pt_br_translations "github.com/go-playground/validator/v10/translations/pt_BR"
 	ru_translations "github.com/go-playground/validator/v10/translations/ru"
 	zh_translations "github.com/go-playground/validator/v10/translations/zh"
 	zh_tw_translations "github.com/go-playground/validator/v10/translations/zh_tw"
@@ -32,8 +34,9 @@ func ApiInitValidator() {
 	esT := es.New()
 	frT := fr.New()
 	zhTwT := zh_Hant.New()
+	ptBrT := pt_BR.New()
 
-	uni := ut.New(enT, cn, koT, ruT, esT, frT, zhTwT)
+	uni := ut.New(enT, cn, koT, ruT, esT, frT, zhTwT, ptBrT)
 
 	enTrans, _ := uni.GetTranslator("en")
 	zhTrans, _ := uni.GetTranslator("zh_Hans_CN")
@@ -42,6 +45,7 @@ func ApiInitValidator() {
 	esTrans, _ := uni.GetTranslator("es")
 	frTrans, _ := uni.GetTranslator("fr")
 	zhTwTrans, _ := uni.GetTranslator("zh_Hant")
+	ptBrTrans, _ := uni.GetTranslator("pt_BR")
 
 	err := zh_translations.RegisterDefaultTranslations(validate, zhTrans)
 	if err != nil {
@@ -65,6 +69,10 @@ func ApiInitValidator() {
 		panic(err)
 	}
 	err = fr_translations.RegisterDefaultTranslations(validate, frTrans)
+	if err != nil {
+		panic(err)
+	}
+	err = pt_br_translations.RegisterDefaultTranslations(validate, ptBrTrans)
 	if err != nil {
 		panic(err)
 	}
@@ -147,6 +155,9 @@ func getTranslatorForLang(lang string) ut.Translator {
 		return trans
 	case "es":
 		trans, _ := Validator.UT.GetTranslator("es")
+		return trans
+	case "pt-BR", "pt_BR", "pt-br", "pt":
+		trans, _ := Validator.UT.GetTranslator("pt_BR")
 		return trans
 	case "fr":
 		trans, _ := Validator.UT.GetTranslator("fr")

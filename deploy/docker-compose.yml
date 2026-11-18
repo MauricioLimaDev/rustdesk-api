@@ -35,7 +35,7 @@ services:
     image: ghcr.io/mauriciolimadev/rustdesk-api:latest
     environment:
       - TZ=America/Sao_Paulo
-      - RUSTDESK_API_LANG=en
+      - RUSTDESK_API_LANG=pt-BR
       - RUSTDESK_API_RUSTDESK_ID_SERVER=remoto.appelsoft.com.br:21116
       - RUSTDESK_API_RUSTDESK_RELAY_SERVER=remoto.appelsoft.com.br:21117
       - RUSTDESK_API_RUSTDESK_API_SERVER=https://remoto.appelsoft.com.br
