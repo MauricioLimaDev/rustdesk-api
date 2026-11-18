@@ -268,6 +268,13 @@ func FileBind(rg *gin.RouterGroup) {
 
 func MyBind(rg *gin.RouterGroup) {
 	{
+		// compartilhados comigo (só leitura no painel)
+		cont := &my.Shared{}
+		rg.GET("/my/shared/collections", cont.Collections)
+		rg.GET("/my/shared/address_book", cont.AddressBooks)
+	}
+
+	{
 		cont := &my.ShareRecord{}
 		rg.GET("/my/share_record/list", cont.List)
 		rg.POST("/my/share_record/delete", cont.Delete)
