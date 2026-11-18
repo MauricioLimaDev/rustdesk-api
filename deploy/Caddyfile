@@ -1,6 +1,18 @@
 remoto.appelsoft.com.br {
 	encode gzip
-	reverse_proxy 127.0.0.1:21114 {
-		header_up X-Real-IP {remote_host}
+
+	# Link público só da versão do cliente (para mandar aos clientes).
+	# A versão da equipe NÃO tem rota aqui: só sai pelo painel, com login.
+	handle /download/cliente {
+		root * /srv/downloads
+		rewrite * /cliente.exe
+		header Content-Disposition "attachment; filename=\"SuporteAppelsoft.exe\""
+		file_server
+	}
+
+	handle {
+		reverse_proxy 127.0.0.1:21114 {
+			header_up X-Real-IP {remote_host}
+		}
 	}
 }

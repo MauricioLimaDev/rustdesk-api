@@ -50,8 +50,17 @@ func Init(g *gin.Engine) {
 
 	RustdeskCmdBind(adg)
 	DeviceGroupBind(adg)
+	DownloadBind(adg)
 	//访问静态文件
 	//g.StaticFS("/upload", http.Dir(global.Config.Gin.ResourcesPath+"/upload"))
+}
+
+// DownloadBind: executáveis do cliente Appelsoft (qualquer usuário logado)
+func DownloadBind(adg *gin.RouterGroup) {
+	cont := &admin.Download{}
+	rg := adg.Group("/download")
+	rg.GET("/info", cont.Info)
+	rg.GET("/arquivo/:tipo", cont.Arquivo)
 }
 
 func RustdeskCmdBind(adg *gin.RouterGroup) {
