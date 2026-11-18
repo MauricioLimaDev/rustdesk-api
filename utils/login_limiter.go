@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"strings"
 	"errors"
 	"sync"
 	"time"
@@ -165,7 +166,7 @@ func (ll *LoginLimiter) VerifyCaptcha(id, answer string) bool {
 	}
 
 	// 验证并清理状态
-	if answer == captcha.Answer {
+	if strings.EqualFold(strings.TrimSpace(answer), strings.TrimSpace(captcha.Answer)) {
 		delete(ll.captchas, id)
 		return true
 	}

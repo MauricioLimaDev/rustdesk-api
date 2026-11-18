@@ -210,7 +210,8 @@ func InitGlobal() {
 		AttemptsWindow:   10 * time.Minute,
 		BanDuration:      30 * time.Minute,
 	})
-	global.LoginLimiter.RegisterProvider(utils.B64StringCaptchaProvider{})
+	// Captcha de conta (ex.: 3+5): o de letras distorcidas era difícil de ler.
+	global.LoginLimiter.RegisterProvider(utils.B64MathCaptchaProvider{})
 	// Bloqueio por usuário: N senhas erradas em 10 min bloqueiam só aquele login por 30 min.
 	global.UserLimiter = utils.NewLoginLimiter(utils.SecurityPolicy{
 		CaptchaThreshold: -1,
