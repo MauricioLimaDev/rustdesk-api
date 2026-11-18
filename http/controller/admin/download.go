@@ -12,7 +12,7 @@ import (
 // Os arquivos ficam na VPS, montados em RUSTDESK_API_DOWNLOADS_DIR (padrão /app/downloads):
 //   cliente.exe -> versão das máquinas atendidas (também tem link público pelo Caddy)
 //   equipe.exe  -> versão do time; só sai por aqui, com usuário logado
-//   equipe-mac-arm64.dmg / equipe-mac-intel.dmg -> equipe para Mac (experimental)
+//   equipe-mac-arm64.dmg -> equipe para Mac Apple Silicon (experimental)
 type Download struct {
 }
 
@@ -34,10 +34,9 @@ var downloadArquivos = map[string]struct {
 	"cliente":          {"cliente.exe", "SuporteAppelsoft.exe", "/download/cliente", false},
 	"equipe":           {"equipe.exe", "SuporteAppelsoft-Equipe.exe", "", false},
 	"equipe-mac-arm64": {"equipe-mac-arm64.dmg", "SuporteAppelsoft-Equipe-mac-arm64.dmg", "", true},
-	"equipe-mac-intel": {"equipe-mac-intel.dmg", "SuporteAppelsoft-Equipe-mac-intel.dmg", "", true},
 }
 
-var downloadOrdem = []string{"cliente", "equipe", "equipe-mac-arm64", "equipe-mac-intel"}
+var downloadOrdem = []string{"cliente", "equipe", "equipe-mac-arm64"}
 
 func downloadsDir() string {
 	if d := os.Getenv("RUSTDESK_API_DOWNLOADS_DIR"); d != "" {
