@@ -46,7 +46,9 @@ ARG FRONTEND_GIT_REPO=https://github.com/lejianwen/rustdesk-api-web.git
 ARG FRONTEND_GIT_BRANCH=master
 # Clone the frontend repository
 
-RUN git clone -b $FRONTEND_GIT_BRANCH $FRONTEND_GIT_REPO .
+# Muda a cada commit do painel: invalida o cache e garante o código novo
+ARG FRONTEND_COMMIT=latest
+RUN git clone -b $FRONTEND_GIT_BRANCH $FRONTEND_GIT_REPO . && echo "painel: ${FRONTEND_COMMIT}" && git log --oneline -1
 
 # Install required tools without caching index to minimize image size
 RUN if [ "$COUNTRY" = "CN" ] ; then \
