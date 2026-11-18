@@ -158,3 +158,8 @@ other = "Acesso bloqueado."
 description = "Register success, wait admin confirm."
 one = "Cadastro feito. Aguarde a aprovação do administrador."
 other = "Cadastro feito. Aguarde a aprovação do administrador."
+
+[UserLocked]
+description = "User locked after too many wrong passwords."
+one = "Muitas senhas erradas. Este usuário está bloqueado por 30 minutos."
+other = "Muitas senhas erradas. Este usuário está bloqueado por 30 minutos."

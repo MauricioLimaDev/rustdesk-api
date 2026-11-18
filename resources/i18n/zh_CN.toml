@@ -160,3 +160,7 @@ other = "已被封禁。"
 description = "Register success, wait for admin confirm."
 one = "注册成功，请等待管理员审核。"
 other = "注册成功，请等待管理员审核。"
+[UserLocked]
+description = "User locked after too many wrong passwords."
+one = "Too many wrong passwords. This user is locked for 30 minutes."
+other = "Too many wrong passwords. This user is locked for 30 minutes."

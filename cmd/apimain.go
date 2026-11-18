@@ -203,13 +203,21 @@ func InitGlobal() {
 	//service
 	service.New(&global.Config, global.DB, global.Logger, global.Jwt, global.Lock)
 
+	// Por IP só o captcha: bloquear o IP travava todo mundo atrás do mesmo NAT.
 	global.LoginLimiter = utils.NewLoginLimiter(utils.SecurityPolicy{
 		CaptchaThreshold: global.Config.App.CaptchaThreshold,
-		BanThreshold:     global.Config.App.BanThreshold,
+		BanThreshold:     0,
 		AttemptsWindow:   10 * time.Minute,
 		BanDuration:      30 * time.Minute,
 	})
 	global.LoginLimiter.RegisterProvider(utils.B64StringCaptchaProvider{})
+	// Bloqueio por usuário: N senhas erradas em 10 min bloqueiam só aquele login por 30 min.
+	global.UserLimiter = utils.NewLoginLimiter(utils.SecurityPolicy{
+		CaptchaThreshold: -1,
+		BanThreshold:     global.Config.App.BanThreshold,
+		AttemptsWindow:   10 * time.Minute,
+		BanDuration:      30 * time.Minute,
+	})
 	DatabaseAutoUpdate()
 }
 

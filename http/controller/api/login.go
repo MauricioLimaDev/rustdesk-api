@@ -11,6 +11,7 @@ import (
 	"github.com/lejianwen/rustdesk-api/v2/model"
 	"github.com/lejianwen/rustdesk-api/v2/service"
 	"net/http"
+	"strings"
 )
 
 type Login struct {
@@ -54,14 +55,28 @@ func (l *Login) Login(c *gin.Context) {
 		return
 	}
 
+	// Bloqueio por usuário (não por IP): checado antes da senha para não dar mais tentativas.
+	userKey := strings.ToLower(strings.TrimSpace(f.Username))
+	if banned, _ := global.UserLimiter.CheckSecurityStatus(userKey); banned {
+		global.Logger.Warn(fmt.Sprintf("Login Fail: %s %s %s %s", "UserLocked", userKey, c.RemoteIP(), clientIp))
+		response.Error(c, response.TranslateMsg(c, "UserLocked"))
+		return
+	}
+
 	u := service.AllService.UserService.InfoByUsernamePassword(f.Username, f.Password)
 
 	if u.Id == 0 {
 		loginLimiter.RecordFailedAttempt(clientIp)
-		global.Logger.Warn(fmt.Sprintf("Login Fail: %s %s %s", "UsernameOrPasswordError", c.RemoteIP(), c.ClientIP()))
+		global.UserLimiter.RecordFailedAttempt(userKey)
+		global.Logger.Warn(fmt.Sprintf("Login Fail: %s %s %s %s", "UsernameOrPasswordError", userKey, c.RemoteIP(), clientIp))
+		if banned, _ := global.UserLimiter.CheckSecurityStatus(userKey); banned {
+			response.Error(c, response.TranslateMsg(c, "UserLocked"))
+			return
+		}
 		response.Error(c, response.TranslateMsg(c, "UsernameOrPasswordError"))
 		return
 	}
+	global.UserLimiter.RemoveAttempts(userKey)
 
 	if !service.AllService.UserService.CheckUserEnable(u) {
 		response.Error(c, response.TranslateMsg(c, "UserDisabled"))

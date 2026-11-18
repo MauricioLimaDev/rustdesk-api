@@ -167,3 +167,7 @@ other = "Prohibido."
 description = "Register success, wait admin confirm."
 one = "Registro exitoso, espere la confirmación del administrador."
 other = "Registro exitoso, espere la confirmación del administrador."
+[UserLocked]
+description = "User locked after too many wrong passwords."
+one = "Too many wrong passwords. This user is locked for 30 minutes."
+other = "Too many wrong passwords. This user is locked for 30 minutes."

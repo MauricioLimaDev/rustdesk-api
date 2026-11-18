@@ -167,3 +167,8 @@ other = "Заблокировано."
 description = "Register success wait admin confirm."
 one = "Регистрация прошла успешно, ожидайте подтверждения администратора."
 other = "Регистрация прошла успешно, ожидайте подтверждения администратора."
+
+[UserLocked]
+description = "User locked after too many wrong passwords."
+one = "Too many wrong passwords. This user is locked for 30 minutes."
+other = "Too many wrong passwords. This user is locked for 30 minutes."

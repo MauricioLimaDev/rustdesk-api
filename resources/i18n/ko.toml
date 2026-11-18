@@ -161,3 +161,7 @@ other = "금지됨."
 description = "Register success wait admin confirm."
 one = "가입 성공, 관리자 확인 대기 중."
 other = "가입 성공, 관리자 확인 대기 중."
+[UserLocked]
+description = "User locked after too many wrong passwords."
+one = "Too many wrong passwords. This user is locked for 30 minutes."
+other = "Too many wrong passwords. This user is locked for 30 minutes."

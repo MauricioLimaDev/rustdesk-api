@@ -2,6 +2,7 @@ package admin
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lejianwen/rustdesk-api/v2/global"
@@ -64,11 +65,24 @@ func (ct *Login) Login(c *gin.Context) {
 		}
 	}
 
+	// Bloqueio por usuário (não por IP): checado antes da senha para não dar mais tentativas.
+	userKey := strings.ToLower(strings.TrimSpace(f.Username))
+	if banned, _ := global.UserLimiter.CheckSecurityStatus(userKey); banned {
+		global.Logger.Warn(fmt.Sprintf("Login Fail: %s %s %s %s", "UserLocked", userKey, c.RemoteIP(), clientIp))
+		response.Fail(c, 101, response.TranslateMsg(c, "UserLocked"))
+		return
+	}
+
 	u := service.AllService.UserService.InfoByUsernamePassword(f.Username, f.Password)
 
 	if u.Id == 0 {
-		global.Logger.Warn(fmt.Sprintf("Login Fail: %s %s %s", "UsernameOrPasswordError", c.RemoteIP(), clientIp))
+		global.Logger.Warn(fmt.Sprintf("Login Fail: %s %s %s %s", "UsernameOrPasswordError", userKey, c.RemoteIP(), clientIp))
 		loginLimiter.RecordFailedAttempt(clientIp)
+		global.UserLimiter.RecordFailedAttempt(userKey)
+		if banned, _ := global.UserLimiter.CheckSecurityStatus(userKey); banned {
+			response.Fail(c, 101, response.TranslateMsg(c, "UserLocked"))
+			return
+		}
 		if _, needCaptcha = loginLimiter.CheckSecurityStatus(clientIp); needCaptcha {
 			response.Fail(c, 110, response.TranslateMsg(c, "UsernameOrPasswordError"))
 		} else {
@@ -97,6 +111,7 @@ func (ct *Login) Login(c *gin.Context) {
 
 	// 登录成功，清除登录限制
 	loginLimiter.RemoveAttempts(clientIp)
+	global.UserLimiter.RemoveAttempts(userKey)
 	responseLoginSuccess(c, u, ut.Token)
 }
 func (ct *Login) Captcha(c *gin.Context) {

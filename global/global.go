@@ -37,4 +37,6 @@ var (
 	Lock         lock.Locker
 	Localizer    func(lang string) *i18n.Localizer
 	LoginLimiter *utils.LoginLimiter
+	// UserLimiter bloqueia só o usuário que errou a senha (chave = usuário em minúsculas)
+	UserLimiter *utils.LoginLimiter
 )

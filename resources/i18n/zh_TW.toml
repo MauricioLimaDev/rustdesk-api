@@ -167,3 +167,8 @@ other = "已被禁用。"
 description = "Register success, wait admin confirm."
 one = "註冊成功，等待管理員確認。"
 other = "註冊成功，等待管理員確認。"
+
+[UserLocked]
+description = "User locked after too many wrong passwords."
+one = "Too many wrong passwords. This user is locked for 30 minutes."
+other = "Too many wrong passwords. This user is locked for 30 minutes."
