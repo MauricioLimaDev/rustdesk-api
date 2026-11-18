@@ -4,7 +4,7 @@
 #   caddy        -> HTTPS automático (Let's Encrypt) na frente da API
 #
 # Antes de subir:
-#   1. Troque SEU_DOMINIO abaixo e no Caddyfile (ex.: suporte.appelsoft.com.br)
+#   1. Troque remoto.appelsoft.com.br abaixo e no Caddyfile (ex.: suporte.appelsoft.com.br)
 #   2. Aponte o DNS (registro A) do domínio para o IP da VPS
 #   3. Libere 80/tcp e 443/tcp no firewall. A 21114 NÃO precisa ficar aberta.
 
@@ -36,9 +36,9 @@ services:
     environment:
       - TZ=America/Sao_Paulo
       - RUSTDESK_API_LANG=en
-      - RUSTDESK_API_RUSTDESK_ID_SERVER=SEU_DOMINIO:21116
-      - RUSTDESK_API_RUSTDESK_RELAY_SERVER=SEU_DOMINIO:21117
-      - RUSTDESK_API_RUSTDESK_API_SERVER=https://SEU_DOMINIO
+      - RUSTDESK_API_RUSTDESK_ID_SERVER=remoto.appelsoft.com.br:21116
+      - RUSTDESK_API_RUSTDESK_RELAY_SERVER=remoto.appelsoft.com.br:21117
+      - RUSTDESK_API_RUSTDESK_API_SERVER=https://remoto.appelsoft.com.br
       - RUSTDESK_API_RUSTDESK_KEY_FILE=/data/id_ed25519.pub
       - RUSTDESK_API_APP_REGISTER=false
       - RUSTDESK_API_APP_WEB_CLIENT=0

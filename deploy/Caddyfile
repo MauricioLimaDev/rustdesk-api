@@ -1,4 +1,4 @@
-SEU_DOMINIO {
+remoto.appelsoft.com.br {
 	encode gzip
 	reverse_proxy 127.0.0.1:21114 {
 		header_up X-Real-IP {remote_host}
