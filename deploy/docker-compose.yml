@@ -43,7 +43,10 @@ services:
       - RUSTDESK_API_APP_REGISTER=false
       - RUSTDESK_API_APP_WEB_CLIENT=0
       - RUSTDESK_API_APP_BAN_THRESHOLD=10
-      - RUSTDESK_API_GIN_TRUST_PROXY=127.0.0.1
+      # Caddy (rede host) chega pela ponte do Docker (172.x.0.1), não por 127.0.0.1.
+      # Sem confiar nessa faixa, todo mundo aparece com o mesmo IP e 10 logins errados
+      # de qualquer pessoa bloqueiam o painel inteiro por 30 min.
+      - RUSTDESK_API_GIN_TRUST_PROXY=127.0.0.1,172.16.0.0/12
     volumes:
       - ./data:/data:ro              # só lê o id_ed25519.pub
       - ./api-data:/app/data         # banco SQLite (fazer backup!)
