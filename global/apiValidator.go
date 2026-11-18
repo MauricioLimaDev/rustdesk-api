@@ -1,6 +1,7 @@
 package global
 
 import (
+	"strings"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/es"
@@ -106,7 +107,7 @@ func ApiInitValidator() {
 				return errList
 			}
 			for _, err2 := range err.(validator.ValidationErrors) {
-				errList = append(errList, err2.Translate(trans))
+				errList = append(errList, traduzirLabels(lang, err2.Translate(trans)))
 			}
 		}
 		return errList
@@ -125,7 +126,7 @@ func ApiInitValidator() {
 				return errList
 			}
 			for _, err2 := range err.(validator.ValidationErrors) {
-				errList = append(errList, err2.Translate(trans))
+				errList = append(errList, traduzirLabels(lang, err2.Translate(trans)))
 			}
 		}
 		return errList
@@ -168,4 +169,32 @@ func getTranslatorForLang(lang string) ut.Translator {
 		trans, _ := Validator.UT.GetTranslator("en")
 		return trans
 	}
+}
+
+// Os rótulos dos campos (tag label) estão em chinês e o validador usa o mesmo
+// rótulo para todos os idiomas. Aqui eles são trocados pelo idioma da requisição.
+var labelPorIdioma = map[string]map[string]string{
+	"pt": {"密码": "Senha", "用户名": "Usuário", "验证码": "Captcha", "平台": "Plataforma",
+		"每页数量": "Itens por página", "状态": "Status", "自动登录": "Login automático",
+		"设备信息": "Informações do dispositivo", "页码": "Página"},
+	"en": {"密码": "Password", "用户名": "Username", "验证码": "Captcha", "平台": "Platform",
+		"每页数量": "Page size", "状态": "Status", "自动登录": "Auto login",
+		"设备信息": "Device info", "页码": "Page"},
+}
+
+func traduzirLabels(lang, msg string) string {
+	l := strings.ToLower(lang)
+	var m map[string]string
+	switch {
+	case strings.HasPrefix(l, "pt"):
+		m = labelPorIdioma["pt"]
+	case strings.HasPrefix(l, "en"):
+		m = labelPorIdioma["en"]
+	default:
+		return msg
+	}
+	for zh, t := range m {
+		msg = strings.ReplaceAll(msg, zh, t)
+	}
+	return msg
 }
