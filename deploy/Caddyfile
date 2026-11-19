@@ -21,6 +21,17 @@ remoto.appelsoft.com.br {
 		file_server
 	}
 
+	# Atualização automática da Equipe. O caminho tem uma chave (secret ATUALIZADOR_CHAVE do
+	# GitHub) que vai embutida no app da Equipe: quem não tem a Equipe não acha o arquivo.
+	# Só esses dois nomes são servidos (sem listagem e sem os arquivos temporários).
+	@atualizacao_equipe path_regexp ^/download/a/[A-Za-z0-9]{32,}/(versao\.json|equipe\.exe)$
+	handle @atualizacao_equipe {
+		root * /srv/downloads
+		uri strip_prefix /download
+		header Cache-Control "no-cache, no-store, must-revalidate"
+		file_server
+	}
+
 	handle {
 		reverse_proxy 127.0.0.1:21114 {
 			header_up X-Real-IP {remote_host}

@@ -61,7 +61,7 @@ services:
     network_mode: "host"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      # As rotas do Caddyfile apontam fixo para cliente.exe e versao.json; o equipe.exe não tem rota pública
+      # Rotas públicas: cliente.exe e versao.json. Equipe só pelo painel ou pelo caminho com chave (a/<chave>/)
       - ./downloads:/srv/downloads:ro
       - ./caddy-data:/data
       - ./caddy-config:/config
