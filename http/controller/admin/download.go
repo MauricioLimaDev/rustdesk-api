@@ -3,6 +3,7 @@ package admin
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lejianwen/rustdesk-api/v2/http/response"
@@ -10,20 +11,22 @@ import (
 
 // Download serve os executáveis do cliente personalizado (Appelsoft).
 // Os arquivos ficam na VPS, montados em RUSTDESK_API_DOWNLOADS_DIR (padrão /app/downloads):
-//   cliente.exe -> versão das máquinas atendidas (também tem link público pelo Caddy)
-//   equipe.exe  -> versão do time; só sai por aqui, com usuário logado
-//   equipe-mac-arm64.dmg -> equipe para Mac Apple Silicon (experimental)
+//
+//	cliente.exe -> versão das máquinas atendidas (também tem link público pelo Caddy)
+//	equipe.exe  -> versão do time; só sai por aqui, com usuário logado
+//	equipe-mac-arm64.dmg -> equipe para Mac Apple Silicon (experimental)
 type Download struct {
 }
 
 type downloadItem struct {
-	Tipo      string `json:"tipo"`
-	Nome      string `json:"nome"`
-	Disponivel bool  `json:"disponivel"`
-	Tamanho   int64  `json:"tamanho"`
-	Atualizado string `json:"atualizado"`
-	LinkPublico string `json:"link_publico"`
-	Experimental bool `json:"experimental"`
+	Tipo         string `json:"tipo"`
+	Nome         string `json:"nome"`
+	Disponivel   bool   `json:"disponivel"`
+	Tamanho      int64  `json:"tamanho"`
+	Atualizado   string `json:"atualizado"`
+	LinkPublico  string `json:"link_publico"`
+	Experimental bool   `json:"experimental"`
+	Versao       string `json:"versao"`
 }
 
 // Versões Mac da equipe são experimentais (sem assinatura da Apple).
@@ -55,6 +58,10 @@ func (d *Download) Info(c *gin.Context) {
 			item.Disponivel = true
 			item.Tamanho = st.Size()
 			item.Atualizado = st.ModTime().Format("2006-01-02 15:04")
+			// Número da versão gravado pelo build ao publicar (<arquivo>.versao).
+			if v, err := os.ReadFile(filepath.Join(downloadsDir(), a.arquivo+".versao")); err == nil {
+				item.Versao = strings.TrimSpace(string(v))
+			}
 		}
 		itens = append(itens, item)
 	}
