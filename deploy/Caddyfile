@@ -21,6 +21,21 @@ remoto.appelsoft.com.br {
 		file_server
 	}
 
+	# Cliente para Windows 32 bits (interface antiga): link público e canal próprio de atualização.
+	handle /download/cliente-x86 {
+		root * /srv/downloads
+		rewrite * /cliente-x86.exe
+		header Content-Disposition "attachment; filename=\"SuporteAppelsoft-32bits.exe\""
+		file_server
+	}
+	handle /download/versao-x86.json {
+		root * /srv/downloads
+		rewrite * /versao-x86.json
+		header Content-Type "application/json; charset=utf-8"
+		header Cache-Control "no-cache, no-store, must-revalidate"
+		file_server
+	}
+
 	# Atualização automática da Equipe. O caminho tem uma chave (secret ATUALIZADOR_CHAVE do
 	# GitHub) que vai embutida no app da Equipe: quem não tem a Equipe não acha o arquivo.
 	# Só esses dois nomes são servidos (sem listagem e sem os arquivos temporários).

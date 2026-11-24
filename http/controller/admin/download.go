@@ -35,11 +35,12 @@ var downloadArquivos = map[string]struct {
 	experimental           bool
 }{
 	"cliente":          {"cliente.exe", "SuporteAppelsoft.exe", "/download/cliente", false},
+	"cliente-x86":      {"cliente-x86.exe", "SuporteAppelsoft-32bits.exe", "/download/cliente-x86", false},
 	"equipe":           {"equipe.exe", "SuporteAppelsoft-Equipe.exe", "", false},
 	"equipe-mac-arm64": {"equipe-mac-arm64.dmg", "SuporteAppelsoft-Equipe-mac-arm64.dmg", "", true},
 }
 
-var downloadOrdem = []string{"cliente", "equipe", "equipe-mac-arm64"}
+var downloadOrdem = []string{"cliente", "cliente-x86", "equipe", "equipe-mac-arm64"}
 
 func downloadsDir() string {
 	if d := os.Getenv("RUSTDESK_API_DOWNLOADS_DIR"); d != "" {
