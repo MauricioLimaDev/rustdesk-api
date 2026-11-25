@@ -1,6 +1,19 @@
 remoto.appelsoft.com.br {
 	encode gzip
 
+	# Registro dos downloads (métrica, sem exibir no painel). Entram no arquivo as rotas
+	# /download (link público, checagens do atualizador e atualização da Equipe) e o
+	# download pelo painel; o resto do painel e da API não é registrado (log_skip abaixo).
+	# Fica em ./caddy-data/downloads.log na VPS. Contagem: deploy/contar-downloads.py.
+	log {
+		output file /data/downloads.log {
+			roll_size 20MiB
+			roll_keep 1000
+			roll_keep_for 87600h
+		}
+		format json
+	}
+
 	# Link público só da versão do cliente (para mandar aos clientes).
 	# A versão da equipe NÃO tem rota aqui: só sai pelo painel, com login.
 	handle /download/cliente {
@@ -47,7 +60,9 @@ remoto.appelsoft.com.br {
 		file_server
 	}
 
+	@nao_download not path /api/admin/download/arquivo/*
 	handle {
+		log_skip @nao_download
 		reverse_proxy 127.0.0.1:21114 {
 			header_up X-Real-IP {remote_host}
 		}
